@@ -2,9 +2,10 @@
 #
 # See documentation in:
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-
+import re
+from scrapy.downloadermiddlewares.redirect import RedirectMiddleware
 from scrapy import signals
-
+from scrapy import Request
 # useful for handling different item types with a single interface
 from itemadapter import is_item, ItemAdapter
 
@@ -101,3 +102,15 @@ class SteamscraperDownloaderMiddleware:
 
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
+    
+class CircumventAgeCheckMiddleware(RedirectMiddleware):
+    def _redirect(self, redirected, request, spider, reason):
+        # Only overrule the default redirect behavior
+        # in the case of mature content checkpoints.
+        if not re.findall('app/(.*)/agecheck', redirected.url) and not re.findall('.*agecheck', redirected.url):
+            return super()._redirect(redirected, request, spider, reason)
+        
+        # logger.debug(f"Button-type age check triggered for {request.url}.")
+        
+        return Request(url=request.url,cookies={'mature_content': '1'},meta={'dont_cache': True},callback=spider.parseGame)    
+    

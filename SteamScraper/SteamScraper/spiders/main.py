@@ -1,6 +1,5 @@
-from scrapy.crawler import CrawlerProcess
+from scrapy.crawler import CrawlerProcess, Crawler
 from scrapy.utils.project import get_project_settings
-
 my_settings = {
     ### dictionary of optional settings
 }
@@ -8,6 +7,12 @@ my_settings = {
 if __name__ == '__main__':
 
     process = CrawlerProcess(get_project_settings())
-    process.crawl('MyScraper',
-                  custom_settings=my_settings,)
+    # top_seller = Crawler('top_seller')
+    # bundle = Crawler('bundle')
+    # basegame = Crawler('basegame')
+    # process.crawl('MyScraper',
+    #               custom_settings=my_settings,)
+    process.crawl('top_seller')
+    process.crawl('bundle')
+    process.crawl('basegame')
     process.start()

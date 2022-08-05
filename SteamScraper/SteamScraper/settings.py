@@ -12,13 +12,29 @@ BOT_NAME = 'SteamScraper'
 SPIDER_MODULES = ['SteamScraper.spiders']
 NEWSPIDER_MODULE = 'SteamScraper.spiders'
 
+# ITEM_PIPELINES = {
+#    'sqlite_demo.pipelines.SqliteDemoPipeline': 300,
+# }
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'SteamScraper (+http://www.yourdomain.com)'
+DOWNLOADER_MIDDLEWARES = {
+    'scrapy.downloadermiddlewares.cookies.CookiesMiddleware': None,
+    'scrapy_cookies.downloadermiddlewares.cookies.CookiesMiddleware': 700,
+    'scrapy.downloadermiddlewares.redirect.RedirectMiddleware': None,
+    'SteamScraper.middlewares.CircumventAgeCheckMiddleware': 600,
+}
+LOG_LEVEL = 'INFO'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
 REDIRECT_ENABLED = True
+
+COOKIES_STORAGE = 'scrapy_cookies.storage.sqlite.SQLiteStorage'
+COOKIES_SQLITE_DATABASE = ':memory:'
+COOKIES_PERSISTENCE = True
+# FEED_URI = "game_db"
+# FEED_
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
 
